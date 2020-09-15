@@ -1,6 +1,8 @@
 node_modules
 .env
 *.json
+!package.json
+!package-lock.json
 *.pptx
 temp
 assets

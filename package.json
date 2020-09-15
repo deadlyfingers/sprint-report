@@ -1,0 +1,21 @@
+{
+  "name": "sprint-report",
+  "version": "1.0.0",
+  "description": "pptx generator for JIRA sprint report",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run scrape && npm run slides",
+    "scrape": "node index.js",
+    "group": "node group.js",
+    "slides": "node slides.js",
+    "test": "node test.js"
+  },
+  "author": "David Douglas",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "pptxgenjs": "^3.3.1",
+    "puppeteer": "^5.2.1"
+  },
+  "private": true
+}
