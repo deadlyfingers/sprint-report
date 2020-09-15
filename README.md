@@ -1,4 +1,4 @@
-# Powerpoint slide generator for JIRA sprint report :bowtie:
+# Powerpoint slide generator for JIRA sprint report
 
 ### Prerequisites
 
@@ -22,7 +22,7 @@ touch .env
 # JIRA issue base url:
 ISSUE_URL = ''
 # JIRA report url of the closed sprint. Reports > Select sprint
-SPRINT_REPORT_URL
+SPRINT_REPORT_URL = ''
 ```
 
 #### Enter Google Chrome .env vars
@@ -79,3 +79,5 @@ TEXT_OVERVIEW = 'Features at a glance'
 TEXT_END_THANKS = 'Thank you'
 TEXT_END_CREDITS = 'Go Team! 👏'
 ```
+
+#### Enjoy :bowtie:
