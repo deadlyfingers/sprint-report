@@ -249,7 +249,7 @@ const defineMasterSlides = async (pptx) => {
       },
       {
         placeholder: {
-          options: { name: S.PLACEHOLDER_ID.footer, type: "body", x: X, y: M.height - barHeight, w: M.width - X - imageWidth - X_BOX, h: barHeight, align: 'right', fontFace: S.FONT.FACE.footer, fontSize: S.FONT.SIZE.body, color: C.white },
+          options: { name: S.PLACEHOLDER_ID.footer, type: "body", x: X, y: M.height - barHeight, w: M.width - X - imageWidth - X_BOX, h: barHeight, align: 'right', valign: 'middle', fontFace: S.FONT.FACE.footer, fontSize: S.FONT.SIZE.body, color: C.white },
           text: "Footer",
         },
       },
@@ -350,7 +350,7 @@ const addContentSlide = (pptx, epic, developer, tickets) => {
  
   slide.addText(titleText, { placeholder: S.PLACEHOLDER_ID.title, fit: 'shrink', shrinkText: true, wrap: false });
   slide.addText(bodyTextObjects, { placeholder: S.PLACEHOLDER_ID.body });
-  slide.addText(developer, { placeholder: S.PLACEHOLDER_ID.footer });
+  slide.addText(developer, { placeholder: S.PLACEHOLDER_ID.footer, valign: 'middle' });
   // slide.addNotes(developer);
 
   // Slide color and background

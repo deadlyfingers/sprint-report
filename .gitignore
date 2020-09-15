@@ -4,5 +4,6 @@ node_modules
 !package.json
 !package-lock.json
 *.pptx
+*.zip
 temp
 assets

@@ -19,7 +19,7 @@ const config = {
   author: process.env.AUTHOR || '',
   revision: process.env.REVISION || '1.0',
   subject: process.env.SUBJECT || 'Sprint Review',
-  title: process.env.title || 'Team',
+  title: process.env.TITLE || 'Team',
 
   font_display: process.env.FONT_DISPLAY || 'Arial',
   font: process.env.FONT || 'Arial',

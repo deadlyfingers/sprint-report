@@ -28,7 +28,7 @@ SPRINT_REPORT_URL = ''
 #### Enter Google Chrome .env vars
 
 ```bash
-#Enter chrome://version/ into Chrome to find out the following info:
+# Enter chrome://version/ into Chrome to find out the following info:
 CHROME_USER_PROFILE_PATH = ''
 CHROME_EXE_PATH = ''
 ```
@@ -52,7 +52,7 @@ npm run slides
 AUTHOR = '🤖'
 REVISION = '1.0'
 SUBJECT = 'Sprint Review Demo'
-TITLE = '🍩🐿️'
+TITLE = '🍩🐿'
 
 # Theme
 FONT_DISPLAY = 'Roboto'
