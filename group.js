@@ -1,8 +1,12 @@
-// Groups tickets by key eg. epic / developer and sorts by status (default)
+// Groups tickets by key eg. epic / developer
+// sort by status (default)
+// filter by status CLOSED (default)
+// if developer is null use 'unassigned' (default)
 
-const groupByKey = (tickets, groupKey, sortKey = 'status', nullValue = 'unassigned') => {
+const groupByKey = (tickets, groupKey, sortKey = 'status', filterStatus = 'CLOSED', nullValue = 'unassigned') => {
   return tickets
     .slice()
+    .filter(t => filterStatus ? t.status === filterStatus : true )
     .sort((a,b) => (a[sortKey] || nullValue).localeCompare((b[sortKey] || nullValue)))
     .reduce((a,c) => {
     const key = c[groupKey] || nullValue;

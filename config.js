@@ -6,7 +6,7 @@ const config = {
   report_file: process.env.REPORT_FILE || 'report.json',
   slide_file: process.env.SLIDE_FILE || 'sprint-report.pptx',
 
-  // scaper vars
+  // scraper vars
   issue_url: process.env.ISSUE_URL,
   sprint_report_url: process.env.SPRINT_REPORT_URL,
 

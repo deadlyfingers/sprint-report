@@ -16,9 +16,11 @@ const SPRINT_REPORT_TABLE_COLUMNS = CONFIG.sprint_report_table_columns;
 const CHROME_USER_PROFILE_PATH = CONFIG.chrome_user_profile_path;
 const CHROME_EXE_PATH = CONFIG.chrome_exe_path;
 
-
 // Config
 const REPORT_FILE = CONFIG.report_file;
+
+// Console
+const TAG = '  ';
 
 async function scrapeReport(url) {
   const browser = await puppeteer.launch({
@@ -32,7 +34,7 @@ async function scrapeReport(url) {
   await page.goto(url);
   await page.waitForSelector('table.aui', { visible: true });
   
-  console.log('sprint report loaded', url);
+  console.log(TAG, 'sprint report loaded', url);
 
   const tickets = await page.evaluate((tableColumns) => {
     return Array.from(document.querySelectorAll('table.aui tr')).reduce((arr, tr) => {
@@ -52,7 +54,7 @@ async function scrapeReport(url) {
     }, []);
   }, SPRINT_REPORT_TABLE_COLUMNS);
 
-  console.log('report ready');
+  console.log(TAG, 'report ready');
 
   let i = tickets.length;
   let n = 0;
@@ -61,7 +63,7 @@ async function scrapeReport(url) {
     n += 1;
   }
 
-  console.log('report complete');
+  console.log(TAG, 'report complete');
 
   fs.writeFileSync(REPORT_FILE, JSON.stringify(tickets, null, 2));
   console.log(`📝 saved file ${REPORT_FILE}`);
@@ -82,7 +84,7 @@ async function addTicketInfo(ticket, page) {
     return;
   }
   
-  console.log(`page loaded ${key}`);
+  console.log(TAG, `page loaded ${key}`);
 
   // Add developer
   ticket.developer = await tab.evaluate(() => {
@@ -106,7 +108,7 @@ async function addTicketInfo(ticket, page) {
     await tab.close();
   }
 
-  console.log(`${key} done. added developer: ${ticket.developer}`);
+  console.log(TAG, `${key} done. added developer: ${ticket.developer}`);
 }
 
 async function main() {
@@ -120,7 +122,7 @@ async function main() {
   console.log('👤', 'You will have to login first time... then rerun the script!');
 
   await scrapeReport(SPRINT_REPORT_URL);
-  console.log('🤖 scape done', SPRINT_REPORT_URL);
+  console.log('🤖 scrape done', SPRINT_REPORT_URL);
 }
 
 main();

@@ -6,7 +6,6 @@
   "scripts": {
     "start": "npm run scrape && npm run slides",
     "scrape": "node index.js",
-    "group": "node group.js",
     "slides": "node slides.js",
     "test": "node test.js"
   },
