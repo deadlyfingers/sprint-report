@@ -22,6 +22,19 @@ const REPORT_FILE = CONFIG.report_file;
 // Console
 const TAG = '  ';
 
+const sprintTitleFormat = (code, milestone = 'M', sprint = 'S') => {
+  if (code.indexOf(milestone) === -1
+    || code.indexOf(milestone)+1 >= code.length
+    || isNaN(parseInt(code.substr(code.indexOf(milestone)+1,1), 10))
+    || code.indexOf(sprint) === -1
+    || code.indexOf(sprint)+1 >= code.length
+    || isNaN(parseInt(code.substr(code.indexOf(sprint)+1,1), 10))
+    ) {
+    return code;
+  }
+  return `Milestone ${code.substr(code.indexOf(milestone)+1,1)} Sprint ${code.substr(code.indexOf(sprint)+1,1)} in review`;
+}
+
 async function scrapeReport(url) {
   const browser = await puppeteer.launch({
     headless: false,
@@ -35,6 +48,18 @@ async function scrapeReport(url) {
   await page.waitForSelector('table.aui', { visible: true });
   
   console.log(TAG, 'sprint report loaded', url);
+
+  const boardName = await page.evaluate(() => {
+    const el = document.querySelector("#ghx-board-name");
+    return el ? el.innerText : null;
+  });
+
+  const sprintLabel = await page.evaluate(() => {
+    const el = document.querySelector("#ghx-items-trigger");
+    return el ? el.innerText : null;
+  });
+
+  const sprintTitle = sprintTitleFormat(sprintLabel);
 
   const tickets = await page.evaluate((tableColumns) => {
     return Array.from(document.querySelectorAll('table.aui tr')).reduce((arr, tr) => {
@@ -63,9 +88,16 @@ async function scrapeReport(url) {
     n += 1;
   }
 
+  const report = {
+    boardName,
+    sprintLabel,
+    sprintTitle,
+    tickets
+  };
+
   console.log(TAG, 'report complete');
 
-  fs.writeFileSync(REPORT_FILE, JSON.stringify(tickets, null, 2));
+  fs.writeFileSync(REPORT_FILE, JSON.stringify(report, null, 2));
   console.log(`📝 saved file ${REPORT_FILE}`);
 
   // auto close

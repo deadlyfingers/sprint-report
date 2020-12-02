@@ -18,8 +18,8 @@ const config = {
   // slide defaults
   author: process.env.AUTHOR || '',
   revision: process.env.REVISION || '1.0',
-  subject: process.env.SUBJECT || 'Sprint Review',
-  title: process.env.TITLE || 'Team',
+  subject: process.env.SUBJECT,
+  title: process.env.TITLE,
 
   font_display: process.env.FONT_DISPLAY || 'Arial',
   font: process.env.FONT || 'Arial',

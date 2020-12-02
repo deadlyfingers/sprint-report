@@ -358,8 +358,9 @@ const addContentSlide = (pptx, epic, developer, tickets) => {
   slide.background = { fill: S.MASTER.CONTENT.backgroundColor };
 }
 
-const createSlides = async (tickets) => {
-  // console.log(TAG, 'create slides');
+const createSlides = async (report) => {
+  const { tickets, boardName, sprintLabel, sprintTitle } = report;
+  console.log(TAG, '⚡ create slides...', boardName, sprintLabel, sprintTitle);
 
   // 1. Create a new Presentation with options
   const pptx = new pptxgen();
@@ -367,8 +368,8 @@ const createSlides = async (tickets) => {
   pptx.author = S.author;
   pptx.company = S.company;
   pptx.revision = S.revision;
-  pptx.subject = S.subject;
-  pptx.title = S.title;
+  pptx.subject = S.subject || sprintTitle;
+  pptx.title = S.title || boardName;
 
   // 1. Define master slides
   await defineMasterSlides(pptx);
@@ -378,8 +379,8 @@ const createSlides = async (tickets) => {
   slideStart.color = S.MASTER.TITLE.color;
 
   // 3. Add slide content
-  slideStart.addText(S.title, { placeholder: S.PLACEHOLDER_ID.title } );
-  slideStart.addText(S.subject, { placeholder: S.PLACEHOLDER_ID.body } );
+  slideStart.addText(S.title || boardName, { placeholder: S.PLACEHOLDER_ID.title } );
+  slideStart.addText(S.subject || sprintTitle, { placeholder: S.PLACEHOLDER_ID.body } );
 
   // Add overview slide
   const slideOverview = pptx.addSlide(S.MASTER.SECTION.key);
@@ -450,9 +451,9 @@ async function main() {
     return;
   }
   const json = await readFile(file);
-  const tickets = JSON.parse(json);
+  const report = JSON.parse(json);
   console.log('🤖 generate slides...');
-  await createSlides(tickets);
+  await createSlides(report);
   console.log('🎉 slides done');
 }
 
