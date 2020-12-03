@@ -352,6 +352,16 @@ const addContentSlide = (pptx, epic, developer, tickets) => {
   slide.addText(bodyTextObjects, { placeholder: S.PLACEHOLDER_ID.body });
   slide.addText(developer, { placeholder: S.PLACEHOLDER_ID.footer, valign: 'middle' });
   // slide.addNotes(developer);
+  const notes = tickets.reduce((arr, t) => {
+    arr.push(t.key);
+    if (t.pr) {
+      arr.push(t.pr.description);
+      arr.push(t.pr.imgs.join('\n'));
+    }
+    arr.push('\n--\n');
+    return arr;
+  }, []).join('\n\n');
+  slide.addNotes(notes);
 
   // Slide color and background
   slide.color = S.MASTER.CONTENT.color;

@@ -136,11 +136,102 @@ async function addTicketInfo(ticket, page) {
     return el ? el.innerText : null;
   });
 
+  await addPRInfo(ticket, tab);
+
   if (!page) {
     await tab.close();
   }
 
   console.log(TAG, `${key} done. added developer: ${ticket.developer}`);
+}
+
+async function addPRInfo(ticket, page) {
+  const { key } = ticket;
+
+  // Wait for Developer Status Panel element
+  try {
+    await page.waitForSelector('#viewissue-devstatus-panel_heading', { visible: true });
+  } catch (err) {
+    console.warn(`⚠️  ${key} No Development status panel found!`);
+    return;
+  }
+
+  // Check if Developer Status Panel is collapsed
+  const isDevStatusPanelCollapsed = await page.evaluate(() => {
+    const el = document.querySelector("#viewissue-devstatus-panel");
+    return el.classList.contains('collapsed');
+  });
+
+  // Toggle Development dropdown open (if not expanded)
+  if (isDevStatusPanelCollapsed) {
+    try {
+      const toggleButton = await page.waitForSelector('#viewissue-devstatus-panel_heading > a', { visible: true, timeout: 3000 });
+      await toggleButton.click();
+    } catch (err) {
+      console.warn(`⚠️  ${key} No Development status toggle button found!`);
+      return;
+    }
+  }
+
+  try {
+    const link = await page.waitForSelector('a.summary[title^="Pull requests"]', { visible: true, timeout: 3000 });
+    await link.click();
+  } catch (err) {
+    console.warn(`⚠️  ${key} No pull requests available.`);
+    return;
+  }
+
+  // Await PR dialog
+  try {
+    await page.waitForSelector('a.pullrequest-link', { visible: true });
+  } catch (err) {
+    console.warn(`⚠️  ${key} No PR links.`);
+    return;
+  }
+
+  // Click PR link (NB: maybe multiple PR links)
+  const id = key.split(' ')[0];
+  console.log(TAG, 'Find PR link with id:', id);
+  const clickedLink = await page.evaluate(async (id) => {
+    let prLink;
+    const prLinks = Array.from(document.querySelectorAll('a.pullrequest-link'));
+    if (prLinks.length === 1) {
+      prLink = prLinks[0];
+    } else if (prLinks.length > 1) {
+      prLink = prLinks.find(el => el.innerText && el.innerText.includes(id));
+    }
+    if (!prLink) {
+      return false;
+    }
+    await prLink.click();
+    return true;
+  }, id);
+
+  if (!clickedLink) {
+    console.warn(`⚠️  ${key} No PR link clicked.`);
+    return;
+  }
+
+  // Await PR
+  try {
+    await page.waitForSelector('div.description', { visible: true });
+  } catch (err) {
+    console.warn(`⚠️  ${key} No PR description.`);
+    return;
+  }
+
+  // Extract info and images from PR page...
+  ticket.pr = {};
+  ticket.pr.description = await page.evaluate(() => {
+    const el = document.querySelector("div.description");
+    return el ? el.innerText : null;
+  });
+  ticket.pr.imgs = await page.evaluate(() => {
+    const els = document.querySelectorAll("div.description img");
+    return els ? Array.from(els).map(el => el.src) : [];
+  });
+
+  console.log(TAG, `${key} PR info and images extracted`);
 }
 
 async function main() {
